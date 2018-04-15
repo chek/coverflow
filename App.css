@@ -1,0 +1,36 @@
+#root {
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body {
+  margin: 0;
+}
+#container {  
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#container img {  
+  position: relative;
+  cursor: pointer;
+  transition: all .45s, z-index .1s;
+}
+#container img.left {  
+  transform: perspective( 600px ) rotateY( 45deg );
+  margin-left: -300px;
+}
+#container img.middle {  
+  /*
+  transform: perspective( 0px ) rotateY( 0deg );
+  */
+}
+#container img.right {  
+  transform: perspective( 600px ) rotateY( -45deg );
+  margin-right: -300px;
+}
