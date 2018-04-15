@@ -7,6 +7,8 @@ var Coverflow = {
     spaceInput: null,
     addButton: null,
 
+    countLeftVisibleImgs: 0,
+    countRightVisibleImgs: 0,
     count: 7,
     index: 3,
     pics: [],
@@ -56,15 +58,51 @@ var Coverflow = {
         el.classList.remove("right");
         Coverflow.setImageSize(el);
     },
+    setCardsOpacity: function() {
+        Coverflow.countLeftVisibleImgs = 0;
+        var countLeftImgs = Coverflow.index - 1;
+        var ind = 0;
+        for (i = Coverflow.index; i >= 0; i--) { 
+            ind += 1;
+            var el = Coverflow.pics[i];
+            if (ind > 5) {
+                var opacity = 1;
+                opacity = opacity - (ind - 5) * 0.1;
+                if (opacity < 0) opacity = 0;
+                el.style.opacity = opacity;    
+                if (opacity > 0) Coverflow.countLeftVisibleImgs += 1;
+            } else {
+                el.style.opacity = '';    
+                Coverflow.countLeftVisibleImgs += 1;
+            }
+        }         
+        Coverflow.countRightVisibleImgs = 0;
+        var countRightImgs = Coverflow.count - Coverflow.index;        
+        var ind = 0;
+        for (i = Coverflow.index; i < Coverflow.count; i++) { 
+            ind += 1;
+            var el = Coverflow.pics[i];
+            if (ind > 5) {
+                var opacity = 1;
+                opacity = opacity - (ind - 5) * 0.1;
+                if (opacity < 0) opacity = 0;
+                el.style.opacity = opacity;    
+                if (opacity > 0) Coverflow.countRightVisibleImgs += 1;
+            } else {
+                el.style.opacity = '';    
+                Coverflow.countRightVisibleImgs += 1;
+            }
+        }         
+    },
     shiftContainer: function() {
         var countLeftImgs = Coverflow.index - 1;
         var countRightImgs = Coverflow.count - Coverflow.index;        
-        if (countRightImgs > countLeftImgs) {
-            var rightOffset = countRightImgs - countLeftImgs - 1;
+        if (Coverflow.countRightVisibleImgs > Coverflow.countLeftVisibleImgs) {
+            var rightOffset = Coverflow.countRightVisibleImgs - Coverflow.countLeftVisibleImgs - 1;
             Coverflow.container.style.paddingLeft = rightOffset * Coverflow.space + 'px';
         }
-        if (countRightImgs < countLeftImgs) {
-            var leftOffset = countLeftImgs - countRightImgs - 1;
+        if (Coverflow.countRightVisibleImgs < Coverflow.countLeftVisibleImgs) {
+            var leftOffset = Coverflow.countLeftVisibleImgs - Coverflow.countRightVisibleImgs - 1;
             Coverflow.container.style.paddingRight = leftOffset * Coverflow.space + 'px';
         }                        
     },
@@ -93,6 +131,7 @@ var Coverflow = {
 
         setTimeout(
             function() { 
+                Coverflow.setCardsOpacity();
                 Coverflow.shiftContainer();
             }, 
             1000
@@ -149,8 +188,9 @@ var Coverflow = {
             };                   
             Coverflow.pics.push(img);
         }        
-        Coverflow.shiftContainer();
         Coverflow.recalculateZIndex();
+        Coverflow.setCardsOpacity();
+        Coverflow.shiftContainer();
         Coverflow.setCurrentImg();
 
 
@@ -163,8 +203,9 @@ var Coverflow = {
             Coverflow.container.appendChild(img);            
             img.src = "https://picsum.photos/320/240?image=" + Coverflow.count;     
             Coverflow.pics.push(img);
-            Coverflow.shiftContainer();            
             Coverflow.recalculateZIndex();
+            Coverflow.setCardsOpacity();
+            Coverflow.shiftContainer();            
         }
         Coverflow.spaceInput.onchange = function(e) {
             e.preventDefault();
@@ -189,8 +230,6 @@ var Coverflow = {
             Coverflow.height = newHeight;
             Coverflow.setImagesSizes();
         }
-        //Coverflow.heightInput = document.getElementById("height");
-
         Coverflow.container.onmousedown = function(e){
             e.preventDefault();
             var coords = [e.clientX, e.clientY];
@@ -209,12 +248,10 @@ var Coverflow = {
         Coverflow.container.ontouchend = function(e){
             e.preventDefault();
             Coverflow.touchStar = null;
-        };
-        
+        };        
         Coverflow.container.onmousemove = function(e){
             e.preventDefault();
             var coords = [e.clientX, e.clientY];
-            //console.log(coords[0] - Coverflow.touchStar[0])
             if ( (Coverflow.touchStar !== null) && (coords[0] > Coverflow.touchStar[0] + 40) ) {
                 if (Coverflow.index > 0) {
                     Coverflow.index -= 1;
