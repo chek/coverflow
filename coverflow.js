@@ -5,6 +5,8 @@ var Coverflow = {
     widthInput: null,
     heightInput: null,
     spaceInput: null,
+    addButton: null,
+
     count: 7,
     index: 3,
     pics: [],
@@ -20,8 +22,8 @@ var Coverflow = {
             var el = Coverflow.pics[i];
             if (i < Coverflow.index) {
                 zIndex += 1;
+                el.style.zIndex = zIndex;    
                 if ( !el.classList.contains("left") ) {
-                    el.style.zIndex = zIndex;    
                     el.classList.remove("right");
                     el.classList.remove("middle");
                     el.classList.add("left");
@@ -34,8 +36,8 @@ var Coverflow = {
             var el = Coverflow.pics[i];
             if (i > Coverflow.index) {
                 zIndex += 1;
+                el.style.zIndex = zIndex;    
                 if ( !el.classList.contains("right") ) {
-                    el.style.zIndex = zIndex;    
                     el.classList.remove("left");
                     el.classList.remove("middle");
                     el.classList.add("right");
@@ -82,12 +84,14 @@ var Coverflow = {
         Coverflow.widthInput = document.getElementById("width");
         Coverflow.heightInput = document.getElementById("height");
         Coverflow.spaceInput = document.getElementById("space");
+        Coverflow.spaceInput = document.getElementById("space");
+        Coverflow.addButton = document.getElementById("add-btn");
             
         var i;
         for (i = 1; i <= Coverflow.count; i++) { 
             var img = document.createElement("img");
             Coverflow.container.appendChild(img);            
-            img.src = "https://loremflickr.com/320/240?random=" + i;     
+            img.src = "https://picsum.photos/320/240?image=" + i;     
             img.onload = function() {
                 Coverflow.loadedImages += 1;
                 if (Coverflow.loadedImages === Coverflow.count) {
@@ -103,6 +107,15 @@ var Coverflow = {
 
 
 
+        Coverflow.addButton.onclick = function(e) {
+            e.preventDefault();
+            Coverflow.count += 1;
+            var img = document.createElement("img");
+            Coverflow.container.appendChild(img);            
+            img.src = "https://picsum.photos/320/240?image=" + Coverflow.count;     
+            Coverflow.pics.push(img);
+            Coverflow.twistPics();
+        }
         Coverflow.spaceInput.onchange = function(e) {
             e.preventDefault();
             Coverflow.space = Coverflow.spaceInput.value;

@@ -10,7 +10,7 @@ body {
   margin: 0;
 }
 #settings {
-  display: block;
+  display: none;
   position: absolute;
   width: 80%;
   height: 50px;
