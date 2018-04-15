@@ -18,11 +18,13 @@ var Coverflow = {
     twistPics: function() {
         var i;
         var zIndex = 0;    
+        var countLeftImgs = 0;
         for (i = 0; i < Coverflow.count; i++) { 
             var el = Coverflow.pics[i];
             if (i < Coverflow.index) {
                 zIndex += 1;
                 el.style.zIndex = zIndex;    
+                countLeftImgs += 1;
                 if ( !el.classList.contains("left") ) {
                     el.classList.remove("right");
                     el.classList.remove("middle");
@@ -32,11 +34,13 @@ var Coverflow = {
             }
         } 
         zIndex = 0;    
+        var countRightImgs = 0;
         for (i = Coverflow.count - 1; i >= 0; i--) { 
             var el = Coverflow.pics[i];
             if (i > Coverflow.index) {
                 zIndex += 1;
                 el.style.zIndex = zIndex;    
+                countRightImgs += 1;
                 if ( !el.classList.contains("right") ) {
                     el.classList.remove("left");
                     el.classList.remove("middle");
@@ -50,6 +54,14 @@ var Coverflow = {
         el.classList.remove("left");
         el.classList.add("middle");
         el.classList.remove("right");
+        if (countRightImgs > countLeftImgs) {
+            var rightOffset = countRightImgs - countLeftImgs - 1;
+            Coverflow.container.style.paddingLeft = rightOffset * Coverflow.space + 'px';
+        }
+        if (countRightImgs < countLeftImgs) {
+            var leftOffset = countLeftImgs - countRightImgs - 1;
+            Coverflow.container.style.paddingRight = leftOffset * Coverflow.space + 'px';
+        }
         Coverflow.setImageSize(el);
     },
     setImagesSizes: function() {
