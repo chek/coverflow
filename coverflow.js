@@ -54,6 +54,8 @@ var Coverflow = {
         el.classList.remove("left");
         el.classList.add("middle");
         el.classList.remove("right");
+        Coverflow.setImageSize(el);
+
         if (countRightImgs > countLeftImgs) {
             var rightOffset = countRightImgs - countLeftImgs - 1;
             Coverflow.container.style.paddingLeft = rightOffset * Coverflow.space + 'px';
@@ -62,7 +64,6 @@ var Coverflow = {
             var leftOffset = countLeftImgs - countRightImgs - 1;
             Coverflow.container.style.paddingRight = leftOffset * Coverflow.space + 'px';
         }
-        Coverflow.setImageSize(el);
     },
     setImagesSizes: function() {
         var i;

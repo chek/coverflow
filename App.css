@@ -38,6 +38,8 @@ body {
   position: relative;
   cursor: pointer;
   transition: all .45s, z-index .1s;
+  border-radius: 3px;
+  border: 1px solid rgb(40, 40, 40)
 }
 #container img.left {  
   transform: perspective( 600px ) rotateY( 66deg );
