@@ -37,7 +37,7 @@ body {
 #container img {  
   position: relative;
   cursor: pointer;
-  transition: all .45s, z-index .1s;
+  transition: all .25s, z-index 0s;
   border-radius: 3px;
   border: 1px solid rgb(40, 40, 40)
 }

@@ -15,16 +15,14 @@ var Coverflow = {
     width: 320,
     height: 240,
     space: 20,
-    twistPics: function() {
+    recalculateZIndex: function() {
         var i;
         var zIndex = 0;    
-        var countLeftImgs = 0;
         for (i = 0; i < Coverflow.count; i++) { 
             var el = Coverflow.pics[i];
             if (i < Coverflow.index) {
                 zIndex += 1;
                 el.style.zIndex = zIndex;    
-                countLeftImgs += 1;
                 if ( !el.classList.contains("left") ) {
                     el.classList.remove("right");
                     el.classList.remove("middle");
@@ -33,6 +31,7 @@ var Coverflow = {
                 }
             }
         } 
+
         zIndex = 0;    
         var countRightImgs = 0;
         for (i = Coverflow.count - 1; i >= 0; i--) { 
@@ -40,7 +39,6 @@ var Coverflow = {
             if (i > Coverflow.index) {
                 zIndex += 1;
                 el.style.zIndex = zIndex;    
-                countRightImgs += 1;
                 if ( !el.classList.contains("right") ) {
                     el.classList.remove("left");
                     el.classList.remove("middle");
@@ -49,13 +47,18 @@ var Coverflow = {
                 }
             }
         } 
+    },
+    setCurrentImg: function() {
         var el = Coverflow.pics[Coverflow.index];
         el.style.zIndex = 10000;    
         el.classList.remove("left");
         el.classList.add("middle");
         el.classList.remove("right");
         Coverflow.setImageSize(el);
-
+    },
+    shiftContainer: function() {
+        var countLeftImgs = Coverflow.index - 1;
+        var countRightImgs = Coverflow.count - Coverflow.index;        
         if (countRightImgs > countLeftImgs) {
             var rightOffset = countRightImgs - countLeftImgs - 1;
             Coverflow.container.style.paddingLeft = rightOffset * Coverflow.space + 'px';
@@ -63,7 +66,37 @@ var Coverflow = {
         if (countRightImgs < countLeftImgs) {
             var leftOffset = countLeftImgs - countRightImgs - 1;
             Coverflow.container.style.paddingRight = leftOffset * Coverflow.space + 'px';
+        }                        
+    },
+    twistPics: function(leftRight) {
+        var currentPic = document.getElementsByClassName("middle")[0];
+        if (typeof currentPic !== 'undefined') {
+            if (!leftRight) {
+                currentPic.classList.add("left");
+                currentPic.classList.remove("middle");
+                currentPic.classList.remove("right");
+                var countLeftImgs = Coverflow.index - 1;
+                currentPic.style.zIndex = countLeftImgs + 1;  
+                Coverflow.setImageSize(currentPic);    
+            }
+            if (leftRight) {
+                currentPic.classList.remove("left");
+                currentPic.classList.remove("middle");
+                currentPic.classList.add("right");
+                var countRightImgs = Coverflow.count - Coverflow.index;        
+                currentPic.style.zIndex = countRightImgs + 1;  
+                Coverflow.setImageSize(currentPic);    
+            }
         }
+
+        Coverflow.setCurrentImg();
+
+        setTimeout(
+            function() { 
+                Coverflow.shiftContainer();
+            }, 
+            1000
+        );
     },
     setImagesSizes: function() {
         var i;
@@ -116,7 +149,10 @@ var Coverflow = {
             };                   
             Coverflow.pics.push(img);
         }        
-        Coverflow.twistPics();
+        Coverflow.shiftContainer();
+        Coverflow.recalculateZIndex();
+        Coverflow.setCurrentImg();
+
 
 
 
@@ -127,7 +163,8 @@ var Coverflow = {
             Coverflow.container.appendChild(img);            
             img.src = "https://picsum.photos/320/240?image=" + Coverflow.count;     
             Coverflow.pics.push(img);
-            Coverflow.twistPics();
+            Coverflow.shiftContainer();            
+            Coverflow.recalculateZIndex();
         }
         Coverflow.spaceInput.onchange = function(e) {
             e.preventDefault();
@@ -158,14 +195,12 @@ var Coverflow = {
             e.preventDefault();
             var coords = [e.clientX, e.clientY];
             Coverflow.touchStar = coords;
-            console.log(Coverflow.touchStar);
         };
         Coverflow.container.ontouchstart = function(e){
             e.preventDefault();
             var touchList = e.changedTouches;
             var coords = [touchList[0].clientX, touchList[0].clientY];
             Coverflow.touchStar = coords;
-            console.log(Coverflow.touchStar);
         };
         Coverflow.container.onmouseup = function(e){
             e.preventDefault();
@@ -184,16 +219,14 @@ var Coverflow = {
                 if (Coverflow.index > 0) {
                     Coverflow.index -= 1;
                     Coverflow.touchStar = null;
-                    Coverflow.twistPics();
-                    console.log('move right')
+                    Coverflow.twistPics(true);
                 }
             }
             if ( (Coverflow.touchStar !== null) &&  (coords[0] < Coverflow.touchStar[0] - 40) ) {
                 if (Coverflow.index < Coverflow.count - 1) {
                     Coverflow.index += 1;
                     Coverflow.touchStar = null;
-                    Coverflow.twistPics();
-                    console.log('move left')
+                    Coverflow.twistPics(false);
                 }
             }
         };
