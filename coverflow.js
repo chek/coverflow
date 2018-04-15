@@ -62,7 +62,7 @@ var Coverflow = {
         Coverflow.countLeftVisibleImgs = 0;
         var countLeftImgs = Coverflow.index - 1;
         var ind = 0;
-        for (i = Coverflow.index; i >= 0; i--) { 
+        for (i = Coverflow.index-1; i >= 0; i--) { 
             ind += 1;
             var el = Coverflow.pics[i];
             if (ind > 5) {
@@ -70,8 +70,13 @@ var Coverflow = {
                 opacity = opacity - (ind - 5) * 0.1;
                 if (opacity < 0) opacity = 0;
                 el.style.opacity = opacity;    
-                if (opacity > 0) Coverflow.countLeftVisibleImgs += 1;
+                if (opacity === 0) el.style.display = 'none';
+                if (opacity > 0) {
+                    el.style.display = 'inline';
+                    Coverflow.countLeftVisibleImgs += 1;
+                }
             } else {
+                el.style.display = 'inline';
                 el.style.opacity = '';    
                 Coverflow.countLeftVisibleImgs += 1;
             }
@@ -79,7 +84,7 @@ var Coverflow = {
         Coverflow.countRightVisibleImgs = 0;
         var countRightImgs = Coverflow.count - Coverflow.index;        
         var ind = 0;
-        for (i = Coverflow.index; i < Coverflow.count; i++) { 
+        for (i = Coverflow.index+1; i < Coverflow.count; i++) { 
             ind += 1;
             var el = Coverflow.pics[i];
             if (ind > 5) {
@@ -87,8 +92,13 @@ var Coverflow = {
                 opacity = opacity - (ind - 5) * 0.1;
                 if (opacity < 0) opacity = 0;
                 el.style.opacity = opacity;    
-                if (opacity > 0) Coverflow.countRightVisibleImgs += 1;
+                if (opacity === 0) el.style.display = 'none';
+                if (opacity > 0) {
+                    el.style.display = 'inline';
+                    Coverflow.countRightVisibleImgs += 1;
+                }
             } else {
+                el.style.display = 'inline';
                 el.style.opacity = '';    
                 Coverflow.countRightVisibleImgs += 1;
             }
@@ -100,10 +110,16 @@ var Coverflow = {
         if (Coverflow.countRightVisibleImgs > Coverflow.countLeftVisibleImgs) {
             var rightOffset = Coverflow.countRightVisibleImgs - Coverflow.countLeftVisibleImgs - 1;
             Coverflow.container.style.paddingLeft = rightOffset * Coverflow.space + 'px';
+            Coverflow.container.style.paddingRight = '';
         }
         if (Coverflow.countRightVisibleImgs < Coverflow.countLeftVisibleImgs) {
             var leftOffset = Coverflow.countLeftVisibleImgs - Coverflow.countRightVisibleImgs - 1;
             Coverflow.container.style.paddingRight = leftOffset * Coverflow.space + 'px';
+            Coverflow.container.style.paddingLeft = '';
+        }                        
+        if (Coverflow.countRightVisibleImgs === Coverflow.countLeftVisibleImgs) {
+            Coverflow.container.style.paddingLeft = '';
+            Coverflow.container.style.paddingRight = '';
         }                        
     },
     twistPics: function(leftRight) {
@@ -134,7 +150,7 @@ var Coverflow = {
                 Coverflow.setCardsOpacity();
                 Coverflow.shiftContainer();
             }, 
-            1000
+            100
         );
     },
     setImagesSizes: function() {
