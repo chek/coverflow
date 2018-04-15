@@ -9,12 +9,30 @@
 body {
   margin: 0;
 }
-#container {  
+#settings {
+  display: block;
+  position: absolute;
+  width: 80%;
+  height: 50px;
+  line-height: 50px;
+  top: 0px;
+  background-color: rgb(180, 180, 180);
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+#loading-container {
   width: 100vw;
-  height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center;  
+}
+#container {  
+  width: 100vw;
+  display: none;
+  /*height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;*/
 }
 #container img {  
   position: relative;
@@ -22,15 +40,10 @@ body {
   transition: all .45s, z-index .1s;
 }
 #container img.left {  
-  transform: perspective( 600px ) rotateY( 45deg );
-  margin-left: -300px;
+  transform: perspective( 600px ) rotateY( 66deg );
 }
 #container img.middle {  
-  /*
-  transform: perspective( 0px ) rotateY( 0deg );
-  */
 }
 #container img.right {  
-  transform: perspective( 600px ) rotateY( -45deg );
-  margin-right: -300px;
+  transform: perspective( 600px ) rotateY( -66deg );
 }
