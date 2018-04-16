@@ -1,3 +1,6 @@
+body {
+  margin: 0;
+}
 #root {
   text-align: center;
   width: 100vw;
@@ -5,9 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-body {
-  margin: 0;
+  overflow: hidden;
 }
 #settings {
   display: none;
