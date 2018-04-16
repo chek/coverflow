@@ -10,13 +10,14 @@ var Coverflow = {
     countLeftVisibleImgs: 0,
     countRightVisibleImgs: 0,
     count: 30,
-    index: 15,
+    index: 25,
     pics: [],
     touchStar: null,
     loadedImages: 0,
     width: 320,
     height: 240,
     space: 10,
+    twisting: false,
     recalculateZIndex: function() {
         var i;
         var zIndex = 0;    
@@ -133,6 +134,13 @@ var Coverflow = {
             twist = true;
         }
         if (twist) {
+            Coverflow.twisting = true;
+            setTimeout(
+                function() { 
+                    Coverflow.twisting = false;
+                }, 
+                300
+            );            
             var currentPic = document.getElementsByClassName("middle")[0];
             if (typeof currentPic !== 'undefined') {
                 if (!twistRight) {
@@ -202,11 +210,11 @@ var Coverflow = {
     initEvents: function() {
         Coverflow.leftShiftBtn.onclick = function(e) {
             e.preventDefault();
-            Coverflow.twistPics(false);
+            if ( !Coverflow.twisting ) Coverflow.twistPics(false);
         }
         Coverflow.rightShiftBtn.onclick = function(e) {
             e.preventDefault();
-            Coverflow.twistPics(true);
+            if ( !Coverflow.twisting ) Coverflow.twistPics(true);
         }
         Coverflow.addButton.onclick = function(e) {
             e.preventDefault();
