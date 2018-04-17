@@ -244,8 +244,6 @@ var Coverflow = {
             );            
             var currentPic = document.getElementsByClassName("middle")[0];
             if (typeof currentPic !== 'undefined') {
-                currentPic.classList.remove("right");
-                currentPic.classList.remove("left");
                 currentPic.classList.remove("middle");
                 if (!twistRight) {
                     currentPic.classList.add("left");
