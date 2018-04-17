@@ -60,11 +60,11 @@ var Coverflow = {
     initEvents: function() {
         Coverflow.leftShiftBtn.onclick = function(e) {
             e.preventDefault();
-            Coverflow.twistPics(false);
+            Coverflow.twistImages(false);
         }
         Coverflow.rightShiftBtn.onclick = function(e) {
             e.preventDefault();
-            Coverflow.twistPics(true);
+            Coverflow.twistImages(true);
         }
         Coverflow.addButton.onclick = function(e) {
             e.preventDefault();
@@ -224,7 +224,7 @@ var Coverflow = {
             Coverflow.container.style.paddingRight = '';
         }                        
     },
-    twistPics: function(twistRight) {
+    twistImages: function(twistRight) {
         var twist = false;
         if ( (Coverflow.index < Coverflow.count - 1) && !twistRight && !Coverflow.twisting ) {
             Coverflow.index += 1;
@@ -293,11 +293,11 @@ var Coverflow = {
     cursorMove: function(coords) {
         if ( (Coverflow.touchStar !== null) && (coords[0] > Coverflow.touchStar[0] + 40) ) {
             Coverflow.touchStar = null;
-            Coverflow.twistPics(true);
+            Coverflow.twistImages(true);
         }
         if ( (Coverflow.touchStar !== null) &&  (coords[0] < Coverflow.touchStar[0] - 40) ) {
             Coverflow.touchStar = null;
-            Coverflow.twistPics(false);
+            Coverflow.twistImages(false);
         }
     },
 };
