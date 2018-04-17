@@ -192,19 +192,18 @@ var Coverflow = {
     },
     setImgOpacity: function (el, ind) {
         var visible = false;
-        if (ind > 5) {
+        if (ind > 5 && ind < 16) {
             var opacity = 1;
             opacity = opacity - (ind - 5) * 0.1;
             if (opacity < 0) opacity = 0;
             el.style.opacity = opacity;    
-            if (opacity === 0) el.style.display = 'none';
-            if (opacity > 0) {
-                el.style.display = 'inline';
-                visible = true
-            }
-        } else {
             el.style.display = 'inline';
+            visible = true
+        } else if (ind >= 16) {
+            el.style.display = 'none';
+        } else {
             el.style.opacity = '';    
+            el.style.display = 'inline';
             visible = true
         }
         return visible;
