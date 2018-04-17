@@ -142,7 +142,6 @@ var Coverflow = {
             }
         } 
         zIndex = 0;    
-        var countRightImgs = 0;
         for (i = Coverflow.count - 1; i >= 0; i--) { 
             var el = Coverflow.pics[i];
             if (i > Coverflow.index) {
@@ -169,55 +168,48 @@ var Coverflow = {
         el.classList.remove("right");
         Coverflow.setImageSize(el);
     },
+    countRightImgs: function(){
+        return Coverflow.count - Coverflow.index;
+    },
+    countLeftImgs: function(){
+        return Coverflow.index - 1;
+    },
     setImagesOpacity: function() {
         Coverflow.countLeftVisibleImgs = 0;
-        var countLeftImgs = Coverflow.index - 1;
         var ind = 0;
         for (i = Coverflow.index-1; i >= 0; i--) { 
             ind += 1;
             var el = Coverflow.pics[i];
-            if (ind > 5) {
-                var opacity = 1;
-                opacity = opacity - (ind - 5) * 0.1;
-                if (opacity < 0) opacity = 0;
-                el.style.opacity = opacity;    
-                if (opacity === 0) el.style.display = 'none';
-                if (opacity > 0) {
-                    el.style.display = 'inline';
-                    Coverflow.countLeftVisibleImgs += 1;
-                }
-            } else {
-                el.style.display = 'inline';
-                el.style.opacity = '';    
-                Coverflow.countLeftVisibleImgs += 1;
-            }
+            if ( Coverflow.setImgOpacity(el, ind) ) Coverflow.countLeftVisibleImgs += 1;
         }         
         Coverflow.countRightVisibleImgs = 0;
-        var countRightImgs = Coverflow.count - Coverflow.index;        
         var ind = 0;
         for (i = Coverflow.index+1; i < Coverflow.count; i++) { 
             ind += 1;
             var el = Coverflow.pics[i];
-            if (ind > 5) {
-                var opacity = 1;
-                opacity = opacity - (ind - 5) * 0.1;
-                if (opacity < 0) opacity = 0;
-                el.style.opacity = opacity;    
-                if (opacity === 0) el.style.display = 'none';
-                if (opacity > 0) {
-                    el.style.display = 'inline';
-                    Coverflow.countRightVisibleImgs += 1;
-                }
-            } else {
-                el.style.display = 'inline';
-                el.style.opacity = '';    
-                Coverflow.countRightVisibleImgs += 1;
-            }
+            if ( Coverflow.setImgOpacity(el, ind) ) Coverflow.countRightVisibleImgs += 1;
         }         
     },
+    setImgOpacity: function (el, ind) {
+        var visible = false;
+        if (ind > 5) {
+            var opacity = 1;
+            opacity = opacity - (ind - 5) * 0.1;
+            if (opacity < 0) opacity = 0;
+            el.style.opacity = opacity;    
+            if (opacity === 0) el.style.display = 'none';
+            if (opacity > 0) {
+                el.style.display = 'inline';
+                visible = true
+            }
+        } else {
+            el.style.display = 'inline';
+            el.style.opacity = '';    
+            visible = true
+        }
+        return visible;
+    },
     shiftContainer: function() {
-        var countLeftImgs = Coverflow.index - 1;
-        var countRightImgs = Coverflow.count - Coverflow.index;        
         if (Coverflow.countRightVisibleImgs > Coverflow.countLeftVisibleImgs) {
             var rightOffset = Coverflow.countRightVisibleImgs - Coverflow.countLeftVisibleImgs - 1;
             Coverflow.container.style.paddingLeft = rightOffset * Coverflow.space + 'px';
@@ -253,26 +245,20 @@ var Coverflow = {
             );            
             var currentPic = document.getElementsByClassName("middle")[0];
             if (typeof currentPic !== 'undefined') {
+                currentPic.classList.remove("right");
+                currentPic.classList.remove("left");
+                currentPic.classList.remove("middle");
                 if (!twistRight) {
                     currentPic.classList.add("left");
-                    currentPic.classList.remove("middle");
-                    currentPic.classList.remove("right");
-                    var countLeftImgs = Coverflow.index - 1;
-                    currentPic.style.zIndex = countLeftImgs + 1;  
-                    Coverflow.setImageSize(currentPic);    
+                    currentPic.style.zIndex = Coverflow.countLeftImgs() + 1;  
                 }
                 if (twistRight) {
-                    currentPic.classList.remove("left");
-                    currentPic.classList.remove("middle");
                     currentPic.classList.add("right");
-                    var countRightImgs = Coverflow.count - Coverflow.index;        
-                    currentPic.style.zIndex = countRightImgs + 1;  
-                    Coverflow.setImageSize(currentPic);    
+                    currentPic.style.zIndex = Coverflow.countRightImgs() + 1;  
                 }
+                Coverflow.setImageSize(currentPic);    
             }
-
             Coverflow.setCurrentImg();
-
             setTimeout(
                 function() { 
                     Coverflow.setImagesOpacity();
