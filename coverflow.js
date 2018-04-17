@@ -60,11 +60,11 @@ var Coverflow = {
     initEvents: function() {
         Coverflow.leftShiftBtn.onclick = function(e) {
             e.preventDefault();
-            if ( !Coverflow.twisting ) Coverflow.twistPics(false);
+            Coverflow.twistPics(false);
         }
         Coverflow.rightShiftBtn.onclick = function(e) {
             e.preventDefault();
-            if ( !Coverflow.twisting ) Coverflow.twistPics(true);
+            Coverflow.twistPics(true);
         }
         Coverflow.addButton.onclick = function(e) {
             e.preventDefault();
@@ -227,11 +227,11 @@ var Coverflow = {
     },
     twistPics: function(twistRight) {
         var twist = false;
-        if ( (Coverflow.index < Coverflow.count - 1) && !twistRight ) {
+        if ( (Coverflow.index < Coverflow.count - 1) && !twistRight && !Coverflow.twisting ) {
             Coverflow.index += 1;
             twist = true;
         }
-        if ( (Coverflow.index > 0) && twistRight ) {
+        if ( (Coverflow.index > 0) && twistRight && !Coverflow.twisting ) {
             Coverflow.index -= 1;
             twist = true;
         }
